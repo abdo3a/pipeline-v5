@@ -1,6 +1,6 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
-cwlVersion: v1.0
+cwlVersion: v1.2.0-dev2
 
 $namespaces:
  edam: http://edamontology.org/
@@ -12,9 +12,6 @@ requirements:
   InlineJavascriptRequirement: {}
   StepInputExpressionRequirement: {}
   ScatterFeatureRequirement: {}
-#  SchemaDefRequirement:
-#    types:
-#      - $import: ../tools/biom-convert/biom-convert-table.yaml
 
 inputs:
     forward_reads: File
@@ -68,18 +65,26 @@ outputs:
     type: File
     outputSource: before-qc/hashsum_reverse
 
-  gz_files:  # fasta.gz, cmsearch.gz, deoverlapped.gz
+  gz_files:
     type: File[]
     outputSource: after-qc/gz_files
+    pickValue: all_non_null
   sequence-categorisation_folder:
     type: Directory
     outputSource: after-qc/sequence-categorisation_folder
+    pickValue: all_non_null
   taxonomy-summary_folder:
     type: Directory
     outputSource: after-qc/taxonomy-summary_folder
+    pickValue: all_non_null
   rna-count:
     type: File
     outputSource: after-qc/rna-count
+    pickValue: all_non_null
+  ITS-length:
+    type: File
+    outputSource: after-qc/ITS-length
+    pickValue: all_non_null
 
 steps:
 
@@ -100,7 +105,9 @@ steps:
 
   after-qc:
     run: conditionals/amplicon/amplicon-2.cwl
+    when: $(inputs.status.basename == 'QC-PASSED')
     in:
+      status: before-qc/qc-status
       filtered_fasta: before-qc/filtered_fasta
       ssu_db: ssu_db
       lsu_db: lsu_db
@@ -127,3 +134,4 @@ steps:
       - rna-count
       - taxonomy-summary_folder
       - sequence-categorisation_folder
+      - ITS-length

@@ -1,6 +1,6 @@
 #!/usr/bin/env cwl-runner
 class: Workflow
-cwlVersion: v1.0
+cwlVersion: v1.2.0-dev2
 
 requirements:
   SubworkflowFeatureRequirement: {}
@@ -56,18 +56,26 @@ outputs:
     type: File
     outputSource: before-qc/hashsum_input
 
-  gz_files:  # fasta.gz, cmsearch.gz, deoverlapped.gz
+  gz_files:
     type: File[]
     outputSource: after-qc/gz_files
+    pickValue: all_non_null
   sequence-categorisation_folder:
     type: Directory
     outputSource: after-qc/sequence-categorisation_folder
+    pickValue: all_non_null
   taxonomy-summary_folder:
     type: Directory
     outputSource: after-qc/taxonomy-summary_folder
+    pickValue: all_non_null
   rna-count:
     type: File
     outputSource: after-qc/rna-count
+    pickValue: all_non_null
+  ITS-length:
+    type: File
+    outputSource: after-qc/ITS-length
+    pickValue: all_non_null
 
 steps:
 
@@ -113,4 +121,5 @@ steps:
       - rna-count
       - taxonomy-summary_folder
       - sequence-categorisation_folder
+      - ITS-length
 
