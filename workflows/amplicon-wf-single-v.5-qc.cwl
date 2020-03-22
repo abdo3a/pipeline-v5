@@ -94,6 +94,7 @@ steps:
 
   after-qc:
     run: conditionals/amplicon/amplicon-2.cwl
+    when: $(inputs.status.basename == 'QC-PASSED')
     in:
       status: before-qc/qc-status
       filtered_fasta: before-qc/filtered_fasta
