@@ -1,0 +1,1 @@
+/hps/nobackup2/production/metagenomics/assemblies/judy/hmp_prediabetes/assembly_result/HMP2_J00873_M_ST_T0_B0_0120_ZN0JE53-02_HA986ADXX_L001/metaspades/001/contigs.fasta
