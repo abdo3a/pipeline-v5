@@ -25,10 +25,6 @@ inputs:
   HMMSCAN_name_database: string
   HMMSCAN_data: Directory
 
-  EggNOG_db: File
-  EggNOG_diamond_db: File
-  EggNOG_data_dir: string
-
   InterProScan_databases: Directory
   InterProScan_applications: string[]  # ../tools/InterProScan/InterProScan-apps.yaml#apps[]?
   InterProScan_outputFormat: string[]  # ../tools/InterProScan/InterProScan-protein_formats.yaml#protein_formats[]?
@@ -40,12 +36,6 @@ outputs:
   ips_result:
     type: File
     outputSource: combine_ips/result
-  eggnog_annotations:
-    outputSource: eggnog/annotations
-    type: File
-  eggnog_orthologs:
-    outputSource: eggnog/orthologs
-    type: File
 
 steps:
 
@@ -103,17 +93,3 @@ steps:
       postfix: name_hmmscan
     out: [result]
     run: ../../utils/concatenate.cwl
-
-  # << EggNOG >>
-  eggnog:
-    run: ../../tools/Assembly/EggNOG/eggnog-subwf.cwl
-    in:
-      fasta_file: split_seqs/chunks
-      db_diamond: EggNOG_diamond_db
-      db: EggNOG_db
-      data_dir: EggNOG_data_dir
-      cpu: { default: 16 }
-      file_acc:
-        source: CGC_predicted_proteins
-        valueFrom: $(self.nameroot)
-    out: [ annotations, orthologs]
