@@ -31,8 +31,9 @@ with open(list_contigs, 'r') as fastas:
         path_dir = os.path.dirname(fasta)
         run_yml = os.path.join(path_dir, 'run.yml')
         copy(yml, run_yml)
-        create_yml_command = 'python3 ' + os.path.join(pipeline_run_folder, 'scripts', 'prepare_yml.py ')
-        create_yml_command += ' -y ' + run_yml + ' -a ' + "assembly" + ' -s ' + fasta
+        with open(run_yml, 'a') as yml_file:
+            yml_file.write(
+            'contigs:\n  class: File\n  format: edam:format_1929\n  path: ' + fasta + '\n')
 
         annotation_dir = os.path.join(path_dir, "assembly-annotation")
         if not os.path.exists(annotation_dir):
