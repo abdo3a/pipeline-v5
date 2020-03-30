@@ -54,7 +54,7 @@ with open(list_contigs, 'r') as fastas:
 
         beginning = 'cd {work_dir} ; time toil-cwl-runner '.format(work_dir=work_dir)
 
-        command = bsub + ' ' + source + ';' + beginning + \
+        command = bsub + ' \"' + source + ';' + beginning + \
               '--no-container --batchSystem LSF --disableCaching --retryCount 3 --stats ' \
               '--defaultMemory {memory} ' \
               '--defaultCores {num_cores} ' \
@@ -63,6 +63,6 @@ with open(list_contigs, 'r') as fastas:
               '--logFile {log_file} ' \
               '{cwl} {yml} >> {json} 2> {stderr}'.format(memory="30G", num_cores="8", job_store=job_store,
                                                          out_dir=out_dir, log_file=log_file, cwl=cwl, yml=run_yml,
-                                                         json=json, stderr=stderr)
+                                                         json=json, stderr=stderr) + '\"'
         print(command)
         run_command(command)
