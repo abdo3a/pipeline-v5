@@ -92,14 +92,14 @@ steps:
     in:
       sequences: contigs
     out: [ count ]
-    run: ../../../utils/count_fasta.cwl
+    run: ../utils/count_fasta.cwl
 
 # <<clean fasta headers??>>
   clean_headers:
     in:
       sequences: contigs
     out: [ sequences_with_cleaned_headers ]
-    run: ../../../utils/clean_fasta_headers.cwl
+    run: ../utils/clean_fasta_headers.cwl
     label: "removes spaces in some headers"
 
 # << Length QC >>
@@ -111,18 +111,18 @@ steps:
       stats_file_name: { default: 'qc_summary' }
       input_file_format: { default: fasta }
     out: [filtered_file, stats_summary_file]
-    run: ../../../tools/qc-filtering/qc-filtering.cwl
+    run: ../tools/qc-filtering/qc-filtering.cwl
 
 # << count processed reads >>
   count_processed_reads:
     in:
       sequences: length_filter/filtered_file
     out: [ count ]
-    run: ../../../utils/count_fasta.cwl
+    run: ../utils/count_fasta.cwl
 
 # << QC FLAG >>
   QC-FLAG:
-    run: ../../../utils/qc-flag.cwl
+    run: ../utils/qc-flag.cwl
     in:
       qc_count: count_processed_reads/count
     out: [ qc-flag ]
@@ -144,7 +144,7 @@ steps:
       pattern_5.8S: 5.8s_pattern
     out:
       - ncRNA
-    run: ../../subworkflows/rna_prediction-sub-wf.cwl
+    run: subworkflows/rna_prediction-sub-wf.cwl
 
   cgc:
     in:
@@ -153,10 +153,10 @@ steps:
       postfixes: CGC_postfixes
       chunk_size: cgc_chunk_size
     out: [ results ]
-    run: ../../subworkflows/assembly/CGC-subwf.cwl
+    run: subworkflows/assembly/CGC-subwf.cwl
 
   functional_annotation:
-    run: ../../subworkflows/functional_annotation.cwl
+    run: subworkflows/functional_annotation.cwl
     in:
       CGC_predicted_proteins:
         source: cgc/results
@@ -174,7 +174,7 @@ steps:
     out: [ hmmscan_result, ips_result]
 
   modify_hmmscan:
-    run: ../../../utils/hmmscan_tab_modification/hmmscan_tab_modification.cwl
+    run: ../utils/hmmscan_tab_modification/hmmscan_tab_modification.cwl
     in:
       input_table: functional_annotation/hmmscan_result
     out: [ output_with_tabs ]
@@ -182,7 +182,7 @@ steps:
 
 # << GO SUMMARY>>
   go_summary:
-    run: ../../../tools/GO-slim/go_summary.cwl
+    run: ../tools/GO-slim/go_summary.cwl
     in:
       InterProScan_results: functional_annotation/ips_result
       config: go_config
@@ -193,7 +193,7 @@ steps:
 
 # << PFAM >>
   pfam:
-    run: ../../../tools/Pfam-Parse/pfam_annotations.cwl
+    run: ../tools/Pfam-Parse/pfam_annotations.cwl
     in:
       interpro: functional_annotation/ips_result
       outputname:
