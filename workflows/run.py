@@ -15,7 +15,7 @@ def run_command(command):
         sys.exit(1)
 
 
-pipeline_run_folder = "/hps/nobackup2/production/metagenomics/pipeline/tools-v5/pipeline-v5-runs"
+pipeline_run_folder = "/hps/nobackup2/production/metagenomics/pipeline/testing/kate/pipeline-v5-runs"
 yml = pipeline_run_folder + "/ymls/assembly-wf-pattern.yml"
 cwl = "/hps/nobackup2/production/metagenomics/pipeline/testing/kate/pipeline-v5/workflows/judy.cwl"
 list_contigs = 'example.txt'  # "/hps/nobackup2/production/metagenomics/assemblies/judy/Mgnify_result/primary_assemblies_non_ena.txt"
@@ -60,4 +60,4 @@ with open(list_contigs, 'r') as fastas:
                                                          out_dir=out_dir, log_file=log_file, cwl=cwl, yml=run_yml,
                                                          json=json, stderr=stderr)
         print(command)
-        #run_command(command)
+        run_command(command)
