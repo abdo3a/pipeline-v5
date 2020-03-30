@@ -4,7 +4,7 @@ import argparse
 import subprocess
 import sys
 import os
-from shutil import copy
+from shutil import copy, rmtree
 
 def run_command(command):
     try:
@@ -29,18 +29,21 @@ with open(list_contigs, 'r') as fastas:
         print(fasta)
         fasta = fasta.strip()
         path_dir = os.path.dirname(fasta)
-        run_yml = os.path.join(path_dir, 'run.yml')
-        copy(yml, run_yml)
-        with open(run_yml, 'a') as yml_file:
-            yml_file.write(
-            'contigs:\n  class: File\n  format: edam:format_1929\n  path: ' + fasta + '\n')
 
         annotation_dir = os.path.join(path_dir, "assembly-annotation")
         if not os.path.exists(annotation_dir):
             os.makedirs(annotation_dir)
 
+        run_yml = os.path.join(annotation_dir, 'run.yml')
+        copy(yml, run_yml)
+        with open(run_yml, 'a') as yml_file:
+            yml_file.write(
+            'contigs:\n  class: File\n  format: edam:format_1929\n  path: ' + fasta + '\n')
+
         work_dir = os.path.join(annotation_dir, "work-dir")
         job_store = os.path.join(annotation_dir, "job-store")
+        if os.path.exists(job_store):
+            rmtree(job_store)
         out_dir = os.path.join(annotation_dir, "result")
         log_file = os.path.join(annotation_dir, "file.log")
         json = os.path.join(annotation_dir, "out.json")
@@ -51,7 +54,7 @@ with open(list_contigs, 'r') as fastas:
         bsub = 'bgadd -L 100 /kates_judy > /dev/null; bgmod -L 100 /kates_judy > /dev/null; ' \
                'bgadd -L 100 /kates_judy_toil > /dev/null; bgmod -L 100 /kates_judy_toil > /dev/null;' \
                'export TOIL_LSF_ARGS=\"-q production-rh74 -g /kates_judy\"; bsub -M 7G -g /kates_judy_toil ' \
-               '-o {work_dir}/bsub.out -e {work_dir}/bsub.err'.format(work_dir=work_dir)
+               '-o {work_dir}/bsub.out -e {work_dir}/bsub.err'.format(work_dir=annotation_dir)
 
         beginning = 'cd {work_dir} ; time toil-cwl-runner '.format(work_dir=work_dir)
 
