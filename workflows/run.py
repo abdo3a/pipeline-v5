@@ -28,7 +28,7 @@ with open(list_contigs, 'r') as fastas:
     for fasta in fastas:
         print(fasta)
         fasta = fasta.strip()
-        path_dir = os.path.basename(fasta)
+        path_dir = os.path.dirname(fasta)
         run_yml = os.path.join(path_dir, 'run.yml')
         copy(yml, run_yml)
         create_yml_command = 'python3 ' + os.path.join(pipeline_run_folder, 'scripts', 'prepare_yml.py ')
