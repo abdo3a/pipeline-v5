@@ -79,5 +79,4 @@ if __name__ == "__main__":
                       '{cwl} {yml} >> {json} 2> {stderr}'.format(memory="30G", num_cores="8", job_store=job_store,
                                                                  out_dir=out_dir, log_file=log_file, cwl=cwl, yml=run_yml,
                                                                  json=json, stderr=stderr) + '\"'
-                print(command)
                 run_command(command)
