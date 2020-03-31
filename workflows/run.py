@@ -51,10 +51,11 @@ with open(list_contigs, 'r') as fastas:
         if not os.path.exists(work_dir):
             os.makedirs(work_dir)
 
-        bsub = 'bgadd -L 100 /kates_judy > /dev/null; bgmod -L 100 /kates_judy > /dev/null; ' \
-               'bgadd -L 100 /kates_judy_toil > /dev/null; bgmod -L 100 /kates_judy_toil > /dev/null;' \
+        bsub = 'bgadd -L 200 /kates_judy > /dev/null; bgmod -L 200 /kates_judy > /dev/null; ' \
+               'bgadd -L 80 /kates_judy_toil > /dev/null; bgmod -L 80 /kates_judy_toil > /dev/null; ' \
+               'export TMPDIR={tmp}; ' \
                'export TOIL_LSF_ARGS=\"-q production-rh74 -g /kates_judy\"; bsub -M 7G -g /kates_judy_toil ' \
-               '-o {work_dir}/bsub.out -e {work_dir}/bsub.err'.format(work_dir=annotation_dir)
+               '-o {work_dir}/bsub.out -e {work_dir}/bsub.err'.format(work_dir=annotation_dir, tmp=work_dir)
 
         beginning = 'cd {work_dir} ; time toil-cwl-runner '.format(work_dir=work_dir)
 
