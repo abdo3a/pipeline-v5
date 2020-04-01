@@ -9,7 +9,7 @@ from shutil import copy, rmtree
 def run_command(command):
     try:
         print('*** command running *** \n' + command + '\n***************')
-        subprocess.Popen(['/bin/bash', '-c', command]).wait()
+        subprocess.Popen(['/bin/bash', '-c', command]).communicate()
     except subprocess.CalledProcessError as e:
         print >> sys.stderr, "ERROR: Failed to run " + ' '.join(e.cmd)
         sys.exit(1)
