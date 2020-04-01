@@ -80,3 +80,8 @@ if __name__ == "__main__":
                                                                  out_dir=out_dir, log_file=log_file, cwl=cwl, yml=run_yml,
                                                                  json=json, stderr=stderr) + '\"'
                 run_command(command)
+                with open(log_file) as f:
+                    print('checking log-file: ' + log_file)
+                    if 'ResolveIndirect' in f.read():
+                        if os.path.exists(job_store): rmtree(job_store)
+                        run_command(command)
